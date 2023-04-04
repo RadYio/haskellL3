@@ -133,7 +133,7 @@ add m1 m2
 
 
 
---Ecrivez une matrice identite6x5 et expliquez les résultats de l’image suivante
+--Ecrivez une matrice identite6x5
 
 identité6x5 :: Matf
 identité6x5 i j | i == j && i<=6 && j<=5 = (True, 1)
