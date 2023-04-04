@@ -36,7 +36,12 @@ halve x = (take (length x `div` 2) x, drop (length x `div` 2) x)
 
 --b) Ecrivez la fonction merge :: Ord a => [a] -> [a] -> [a] qui fusionne 2 listes triées en une seule liste triée.
 merge :: Ord a => [a] -> [a] -> [a]
-merge x y = isort (x ++ y)
+merge [] [] = []
+merge [] (y:ys) = y:ys
+merge (x:xs) [] = x:xs
+merge (x:xs) (y:ys) | x <= y = x:merge xs (y:ys)
+                    | otherwise = y:merge (x:xs) ys
+
 
 --c) Ecrivez la fonction msort :: Ord a => [a] -> [a] de tri par fusion. On utilisera merge et halve.
 msort :: Ord a => [a] -> [a]
@@ -73,6 +78,24 @@ p4 = Imply (And (Var 'A') (Imply (Var 'A') (Var 'B'))) (Var 'B')
 type Assoc k v = [(k, v)]           -- Tableau associatif ( clé, valeur )
 type Subst = Assoc Char Bool        -- Tableau associatif ( une_variable, sa_valeur )
 
+
+
 --a) Ecrivez la fonction find :: Eq k => k -> Assoc k v -> v . Vous pouvez utiliser une liste par compréhension ou définir récursivement la fonction. On considère que k existe forcément dans la liste associative.
 
 find :: Eq k => k -> Assoc k v -> v
+find k ((x,y):xs) | k == x = y
+                  | otherwise = find k xs
+
+--b) Ecrivez la fonction eval :: Subst -> Prop -> Bool qui évalue une proposition donnée selon une liste de substitution donnée.
+
+eval :: Subst -> Prop -> Bool
+eval _ (Const b) = b  
+eval s (Var x) = find x s  
+eval s (Not p) = not (eval s p)  
+eval s (And p q) = (eval s p) && (eval s q)  
+eval s (Imply p q) = not (eval s p) || (eval s q)  
+
+
+
+
+
